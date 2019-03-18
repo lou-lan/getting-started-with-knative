@@ -24,7 +24,7 @@ Knative Serving 始于 Configuration。您可以在 Configuration 中为部署�
 
 以下[示例 2-1](#example-2-1) 展示了一个完整的 Configuration 定义。它指定一个 Revision，该 Revision 使用一个容器镜像仓库 URI 引用一个特定的镜像并且指定其版本标签。
 
-<span id="example-2-1">*示例 2-1. knative-helloworld/configuration.yml* </span>
+<span id="example-2-1">*示例 2-1. knative-helloworld/configuration.yaml* </span>
 
 ```yaml
 apiVersion: serving.knative.dev/v1alpha1
@@ -138,7 +138,7 @@ pod/knative-helloworld-00001-deployment-5f7b54c768-lrqt5
 ## Route（路由）
 Knative 中的 Route 提供了一种将流量路由到正在运行的代码的机制。它将一个命名的，HTTP 可寻址端点映射到一个或者多个 Revision。Configuration 本身并不定义 Route。[示例 2-4](#example-2-4) 展示了一个将流量发送到指定 Configuration 最新 Revision 的最基本路由定义。
 
-*<span id="example-2-4">示例 2-4. knative-helloworld/route.yml</span>*
+*<span id="example-2-4">示例 2-4. knative-helloworld/route.yaml</span>*
 
 ```yaml
 apiVersion: serving.knative.dev/v1alpha1
@@ -167,7 +167,7 @@ http://$KNATIVE_INGRESS
 
 通过使用 `revisionName` 替代 `latestReadyRevisionName` ，您可以锁定一个 Route 以发送流量到一个指定的 Revision。使用 `name` 属性，您也可以通过可寻址子域名访问 Revision。[示例 2-5](#example-2-5) 同时展示两种场景。
 
-<span id="example-2-5">*示例 2-5. knative-routing-demo/route.yml*</span>
+<span id="example-2-5">*示例 2-5. knative-routing-demo/route.yaml*</span>
 
 ```yaml
 apiVersion: serving.knative.dev/v1alpha1
@@ -274,9 +274,9 @@ Autoscaler 也负责缩容至零。Revision 处于 Active (激活) 状态才接�
 
 一个 Service 注意确保一个应用有一个 Route、一个 Configuation，以及为每次 Service 更新产生的一个新 Revision。当创建一个 Service 时，您没有特别定义一个 Route，Knative 创建一个发送流量到最新 Revision 的路由。您可以选择一个特定的 Revision 以路由流量到该 Revision。
 
-不要求您明确创建一个 Service。Route 和 Configuration 可以被分开在不同的 YAML 文件（如[示例 2-1](#example-2-1) 和 [示例 2-4](#example-2-4)）。在这种情形下，您可以应用每个单独的对象到集群。然而，推荐的方式使用一个 Service 来编排 Route 和 Configuration。[示例 2-8](#example-2-8) 所示文件用于替换来自[示例 2-1](#example-2-1) 和[示例 2-4](#example-2-4) 定义的 `configuation.yml` 和 `route.yml`。
+不要求您明确创建一个 Service。Route 和 Configuration 可以被分开在不同的 YAML 文件（如[示例 2-1](#example-2-1) 和 [示例 2-4](#example-2-4)）。在这种情形下，您可以应用每个单独的对象到集群。然而，推荐的方式使用一个 Service 来编排 Route 和 Configuration。[示例 2-8](#example-2-8) 所示文件用于替换来自[示例 2-1](#example-2-1) 和[示例 2-4](#example-2-4) 定义的 `configuation.yaml` 和 `route.yaml`。
 
-<span id="example-2-8">*示例 2-8. knative-helloworld/service.yml* </span>
+<span id="example-2-8">*示例 2-8. knative-helloworld/service.yaml* </span>
 
 ```yaml
 apiVersion: serving.knative.dev/v1alpha1
@@ -293,7 +293,7 @@ spec:
             image: docker.io/gswk/knative-helloworld:latest
 ```
 
-注意这个 `service.yml` 文件和 `configuration.yml` 非常相似。这个文件定义 Configuration 并且是最小化 Service 定义。由于这里没有 Route 定义，一个默认 Route 指向最新 Revision。Service 控制器整体追踪它所有的 configuration 和 Route 的状态。然后反映这些状态在它的 `ConfigurationsReady` 和 `RoutesReady` conditions 属性里。当通过 CLI 使用 `kubectl get ksvc` 命令请求 Knative Service 信息的时候，这些状态可以被看到。
+注意这个 `service.yaml` 文件和 `configuration.yaml` 非常相似。这个文件定义 Configuration 并且是最小化 Service 定义。由于这里没有 Route 定义，一个默认 Route 指向最新 Revision。Service 控制器整体追踪它所有的 configuration 和 Route 的状态。然后反映这些状态在它的 `ConfigurationsReady` 和 `RoutesReady` conditions 属性里。当通过 CLI 使用 `kubectl get ksvc` 命令请求 Knative Service 信息的时候，这些状态可以被看到。
 
 <span id="example-2-9">*示例 2-9. `kubectl get ksvc knative-helloworld -oyaml` 命令输出片段* </span>
 
